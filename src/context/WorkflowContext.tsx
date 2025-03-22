@@ -1,5 +1,6 @@
-"use client"
+"use client";
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import toast, { Toaster } from 'react-hot-toast';
 
 export enum ActionType {
   ALERT = 'ALERT',
@@ -59,10 +60,12 @@ export const WorkflowProvider: React.FC<{ children: React.ReactNode }> = ({ chil
 
   const addAction = (action: Action) => {
     setActions((prevActions) => [...prevActions, action]);
+    toast.success('Action added successfully!');
   };
 
   const removeAction = (index: number) => {
     setActions((prevActions) => prevActions.filter((_, i) => i !== index));
+    toast.success('Action removed successfully!');
   };
 
   const reorderActions = (startIndex: number, endIndex: number) => {
@@ -73,10 +76,12 @@ export const WorkflowProvider: React.FC<{ children: React.ReactNode }> = ({ chil
       updatedActions.splice(endIndex, 0, movedAction);
       return updatedActions;
     });
+    toast.success('Actions reordered successfully!');
   };
 
   const updateAction = (index: number, updatedAction: Action) => {
     setActions((prevActions) => prevActions.map((action, i) => (i === index ? updatedAction : action)));
+    toast.success('Action updated successfully!');
   };
 
   return (

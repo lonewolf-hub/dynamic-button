@@ -1,5 +1,4 @@
 'use client';
-
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { ActionType, useWorkflow } from '@/context/WorkflowContext';
@@ -9,6 +8,9 @@ import PopupModal from '@/app/components/PopupModal';
 import { FaEllipsisV, FaEdit, FaTrash, FaEye, FaSyncAlt, FaPalette, FaWindowClose, FaArrowRight } from 'react-icons/fa';
 import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
 
+const truncateText = (text: string, maxLength = 30) => {
+  return text.length > maxLength ? text.substring(0, maxLength) + "..." : text;
+};
 const ConfigPage = () => {
   const { label, setLabel, actions, addAction, reorderActions, removeAction, updateAction } = useWorkflow();
   const [newActionType, setNewActionType] = useState<ActionType>(ActionType.ALERT);
@@ -40,11 +42,11 @@ const ConfigPage = () => {
   return (
     <div className="container mx-auto p-6 bg-gray-50 rounded-lg shadow-lg">
       <h1 className="text-3xl font-bold mb-6 text-primary text-center">Configure Button Workflow</h1>
-      
-      <div className="bg-white p-6 rounded-lg shadow-md">
+
+      <div className="bg-white p-6 rounded-lg shadow-md mx-20">
         <label className="block mb-2 font-semibold text-gray-700">Button Label:</label>
         <Input value={label} onChange={(e) => setLabel(e.target.value)} className="mb-4" />
-        
+
         <div className="flex gap-2 items-center">
           <select
             value={newActionType}
@@ -61,9 +63,9 @@ const ConfigPage = () => {
           </Button>
         </div>
       </div>
-      
+
       {/* Visual Workflow Preview */}
-      <div className="bg-white mt-6 p-6 rounded-lg shadow-md border border-gray-300">
+      <div className="bg-white mt-6 p-6 rounded-lg shadow-md border border-gray-300 mx-20">
         <h2 className="text-lg font-semibold mb-3 text-gray-700">Workflow Preview</h2>
         <div className="flex items-center gap-4 flex-wrap">
           {actions.map((action, index) => (
@@ -73,15 +75,15 @@ const ConfigPage = () => {
                 {action.type === ActionType.REFRESH_PAGE && <FaSyncAlt className="text-green-500" />}
                 {action.type === ActionType.CHANGE_BUTTON_COLOR && <FaPalette className="text-yellow-500" />}
                 {action.type === ActionType.CLOSE_WINDOW && <FaWindowClose className="text-red-500" />}
-                <span className="text-gray-700 font-medium">{action.type.replace('_', ' ')}: {action.message}</span>
+                <span className="text-gray-700 font-medium truncate max-w-80">{action.type.replace('_', ' ')}: {action.message}</span>
               </div>
               {index < actions.length - 1 && <FaArrowRight className="text-gray-500" />}
             </React.Fragment>
           ))}
         </div>
       </div>
-      
-      <div className="mx-4 mt-6">
+
+      <div className="mx-20 mt-6 ">
         <DragDropContext onDragEnd={(result) => {
           if (!result.destination) return;
           reorderActions(result.source.index, result.destination.index);
@@ -91,10 +93,10 @@ const ConfigPage = () => {
               <table className="w-full bg-white rounded-lg shadow-md border border-gray-300" {...provided.droppableProps} ref={provided.innerRef}>
                 <thead>
                   <tr className="border-b border-gray-300 bg-gray-200 text-gray-700">
-                    <th className="p-4">Button Action</th>
-                    <th className="p-4">Action</th>
-                    <th className="p-4">Message</th>
-                    <th className="p-4">Actions</th>
+                    <th className="p-4 text-left">Move</th>
+                    <th className="p-4 text-left">Button Action</th>
+                    <th className="p-4 text-left">Message</th>
+                    <th className="p-4 text-left">Actions</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -104,8 +106,8 @@ const ConfigPage = () => {
                         <tr ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps} className="border-b border-gray-300 hover:bg-gray-100">
                           <td className="p-4 cursor-grab"><FaEllipsisV /></td>
                           <td className="p-4">{action.type.replace('_', ' ')}</td>
-                          <td className="p-4">{action.message}</td>
-                          <td className="p-4 flex gap-2">
+                          <td className="p-4 truncate max-w-60">{action.message}</td>
+                          <td className="p-4 flex gap-6">
                             <FaEdit className="cursor-pointer text-blue-500" onClick={() => {
                               setEditingIndex(index);
                               setNewActionType(action.type as ActionType);
@@ -127,9 +129,9 @@ const ConfigPage = () => {
           </Droppable>
         </DragDropContext>
       </div>
-      
-      <Button onClick={() => router.push('/output')} className="mt-6 bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">Go to Output Page</Button>
-      
+
+      <Button onClick={() => router.push('/output')} className="mt-6 bg-green-700 text-white px-4 py-2 rounded-md hover:bg-green-800 mx-20">Go to Output Page</Button>
+
       <PopupModal
         isOpen={showModal}
         onClose={() => setShowModal(false)}
@@ -139,4 +141,4 @@ const ConfigPage = () => {
     </div>
   );
 }
- export default ConfigPage;
+export default ConfigPage;
