@@ -1,8 +1,6 @@
 'use client';
-
 import { useWorkflow } from '@/context/WorkflowContext';
 import { useState, useEffect } from 'react';
-import Image from 'next/image';
 import { FaPlay } from 'react-icons/fa';
 import Button from '@/app/components/Button';
 import { toast } from 'react-hot-toast';
@@ -27,7 +25,7 @@ type Action = {
   message?: string;
 };
 
-export default function OutputPage() {
+const  OutputPage = () =>  {
   const { label, actions } = useWorkflow() as { label: string; actions: Action[] };
   const [buttonSize, setButtonSize] = useState(1);
   const [buttonColor, setButtonColor] = useState('#007BFF');
@@ -56,7 +54,7 @@ export default function OutputPage() {
   const performAction = (action: Action) => {
     const actionHandlers: Record<ActionType, () => void> = {
       [ActionType.ALERT]: () => toast.success(action.value || 'Alert Triggered!'),
-      [ActionType.SHOW_TEXT]: () => setDisplayText(action.value || 'No text provided'),
+      [ActionType.SHOW_TEXT]: () => setDisplayText(action.message || 'No text provided'),
       [ActionType.SHOW_IMAGE]: () => setImageUrl(action.message || ''),
       [ActionType.REFRESH_PAGE]: () => window.location.reload(),
       [ActionType.SET_LOCAL_STORAGE]: () => {
@@ -109,7 +107,10 @@ export default function OutputPage() {
         <FaPlay /> {label || 'Execute Actions'}
       </Button>
       {displayText && <p className="mt-6 text-lg font-semibold bg-white px-6 py-3 rounded shadow-md border">{displayText}</p>}
-      {imageUrl && <Image src={imageUrl} alt="Dynamic" width={200} height={200} className="mt-6 rounded shadow-md" />}
-    </div>
+      {imageUrl && <img src={imageUrl} alt="Dynamic" width={200} height={200} className="mt-6 rounded shadow-md" />
+    }
+    </div> 
   );
 }
+
+export default OutputPage;

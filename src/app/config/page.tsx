@@ -8,9 +8,7 @@ import PopupModal from '@/app/components/PopupModal';
 import { FaEllipsisV, FaEdit, FaTrash, FaEye, FaSyncAlt, FaPalette, FaWindowClose, FaArrowRight } from 'react-icons/fa';
 import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
 
-const truncateText = (text: string, maxLength = 30) => {
-  return text.length > maxLength ? text.substring(0, maxLength) + "..." : text;
-};
+
 const ConfigPage = () => {
   const { label, setLabel, actions, addAction, reorderActions, removeAction, updateAction } = useWorkflow();
   const [newActionType, setNewActionType] = useState<ActionType>(ActionType.ALERT);
